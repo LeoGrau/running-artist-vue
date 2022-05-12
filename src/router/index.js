@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import OffersView from "../views/offers-view.vue";
-import CrudOffersView from "../views/crud-offers-view.vue";
+import ChallengesView from "../views/challenges-view.vue";
+import ChallengesOffersView from "../views/crud-challenges-view.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,12 +8,12 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: OffersView,
+      component: ChallengesView,
     },
     {
-      path: "/offers",
-      name: "offers",
-      component: CrudOffersView,
+      path: "/business/challenges",
+      name: "challenges",
+      component: ChallengesOffersView,
     },
   ],
 });

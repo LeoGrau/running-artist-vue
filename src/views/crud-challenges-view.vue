@@ -14,7 +14,7 @@
             icon="pi pi-trash"
             class="p-button-danger"
             @click="confirmDeleteSelected"
-            :disabled="!selectedOffers || !selectedOffers.length"
+            :disabled="!selectedChallenges || !selectedChallenges.length"
           />
         </template>
         <template #end>
@@ -28,8 +28,8 @@
       </pv-toolbar>
       <pv-data-table
         ref="dt"
-        :value="offers"
-        v-model:selection="selectedOffers"
+        :value="challenges"
+        v-model:selection="selectedChallenges"
         dataKey="id"
         :paginator="true"
         :rows="5"
@@ -41,9 +41,15 @@
       >
         <template #header>
           <div
-            class="table-header flex flex-column md:flex-row md:justify-content-between"
+            class="
+              table-header
+              flex flex-column
+              md:flex-row md:justify-content-between
+            "
           >
-            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">Manage Offers</h5>
+            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">
+              Manage challenges
+            </h5>
             <span class="p-input-icon-left"
               ><i class="pi pi-search" /><pv-input-text
                 v-model="filters['global'].value"
@@ -70,21 +76,21 @@
           style="min-width: 16rem"
         ></pv-column>
         <pv-column
-          field="description"
-          header="Description"
+          field="businessId"
+          header="Business Id"
           :sortable="true"
           style="min-width: 16rem"
         ></pv-column>
         <pv-column
-          field="points"
-          header="Points"
+          field="urlToImage"
+          header="URL To Image"
           :sortable="true"
           style="min-width: 12rem"
         >
         </pv-column>
         <pv-column
-          field="businessId"
-          header="Business Id"
+          field="challengeType"
+          header="Challenge Type"
           :sortable="true"
           style="min-width: 12rem"
         >
@@ -95,21 +101,21 @@
             <pv-button
               icon="pi pi-pencil"
               class="p-button-text p-button-rounded"
-              @click="editOffer(slotProps.data)"
+              @click="editChallenge(slotProps.data)"
             />
             <pv-button
               icon="pi pi-trash"
               class="p-button-text p-button-rounded"
-              @click="confirmDeleteOffer(slotProps.data)"
+              @click="confirmDeleteChallenge(slotProps.data)"
             />
           </template>
         </pv-column>
       </pv-data-table>
     </div>
     <pv-dialog
-      v-model:visible="offerDialog"
+      v-model:visible="challengeDialog"
       :style="{ width: '450px' }"
-      header="Offer Information"
+      header="Challenge Information"
       :modal="true"
       class="p-fluid"
     >
@@ -119,50 +125,52 @@
           <pv-input-text
             type="text"
             id="title"
-            v-model.trim="offer.title"
+            v-model.trim="challenge.title"
             required="true"
             autofocus
-            :class="{ 'p-invalid': submitted && !offer.title }"
+            :class="{ 'p-invalid': submitted && !challenge.title }"
           />
           <label for="title">Title</label>
-          <small class="p-error" v-if="submitted && !offer.title"
+          <small class="p-error" v-if="submitted && !challenge.title"
             >Title is required.</small
           >
         </span>
       </div>
       <div class="field">
         <span class="p-float-label">
-          <pv-input-text
-            id="description"
-            v-model="offer.description"
+          <pv-input-number
+            id="businessId"
+            v-model="challenge.businessId"
             required="false"
             rows="2"
             cols="2"
           />
-          <label for="description">Description</label>
+          <label for="description">BusinessId</label>
         </span>
-      </div>
-      <div class="field">
-        <label for="minmax-buttons">Points</label>
-        <InputNumber
-          id="points"
-          v-model="offer.points"
-          mode="decimal"
-          showButtons
-          :min="0"
-          :max="100"
-        />
       </div>
       <div class="field">
         <span class="p-float-label">
           <pv-input-text
-            id="businessId"
-            v-model="offer.businessId"
+            id="urlToImage"
+            v-model="challenge.urlToImage"
             required="false"
             rows="2"
             cols="2"
           />
-          <label for="description">Business Id</label>
+          <label for="urlToImage">URL To Image</label>
+        </span>
+      </div>
+      <div class="field">
+        <span class="p-float-label">
+          <pv-dropdown
+            id="challengeType"
+            v-model="challenge.challengeType"
+            :options = "['Individual','Team']"
+            required="true"
+            rows="2"
+            cols="2"
+          />
+          <label for="description">Challenge Type</label>
         </span>
       </div>
 
@@ -177,20 +185,20 @@
           label="Save"
           icon="pi pi-check"
           class="p-button-text"
-          @click="saveOffer"
+          @click="saveChallenge"
         />
       </template>
     </pv-dialog>
     <pv-dialog
-      v-model:visible="deleteOfferDialog"
+      v-model:visible="deleteChallengeDialog"
       :style="{ width: '450px' }"
       header="Confirm"
       :modal="true"
     >
       <div class="confirmation-content">
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-        <span v-if="offer"
-          >Are you sure you want to delete <b>{{ offer.title }}</b></span
+        <span v-if="challenge"
+          >Are you sure you want to delete <b>{{ challenge.title }}</b></span
         >
       </div>
       <template #footer>
@@ -198,25 +206,25 @@
           label="No"
           icon="pi pi-times"
           class="p-button-text"
-          @click="deleteOfferDialog = false"
+          @click="deleteChallengeDialog = false"
         />
         <pv-button
           label="Yes"
           icon="pi pi-check"
           class="p-button-text"
-          @click="deleteOffer"
+          @click="deleteChallenge"
         />
       </template>
     </pv-dialog>
     <pv-dialog
-      v-model:visible="deleteOffersDialog"
+      v-model:visible="deleteChallengesDialog"
       :style="{ width: '450px' }"
       header="Confirm"
       :modal="true"
     >
       <div class="confirmation-content">
         <i class="pi pi-exclamation-triangle mr-3" syle="font-size: 2rem" />
-        <span v-if="selectedOffers"
+        <span v-if="selectedChallenges"
           >Are you sure you want to delete the selected tutorials?</span
         >
       </div>
@@ -225,13 +233,13 @@
           label="No"
           icon="pi pi-times"
           class="p-button-text"
-          @click="deleteOffersDialog = false"
+          @click="deleteChallengesDialog = false"
         />
         <pv-button
           label="Yes"
           icon="pi pi-check"
           class="p-button-text"
-          @click="deleteSelectedOffers"
+          @click="deleteSelectedChallenges"
         />
       </template>
     </pv-dialog>
@@ -239,47 +247,49 @@
 </template>
 
 <script>
-import { OffersApiService } from "../services/offers-api.service";
+import { ChallengesApiService } from "../services/challenges-api.service";
 import { FilterMatchMode } from "primevue/api";
 export default {
-  name: "tutorial-list",
+  name: "challenge-list",
   data() {
     return {
-      offers: [],
-      offerDialog: false,
-      deleteOfferDialog: false,
-      deleteOffersDialog: false,
-      offer: {},
-      selectedOffers: null,
+      challenges: [],
+      challengeDialog: false,
+      deleteChallengeDialog: false,
+      deleteChallengesDialog: false,
+      challenge: {},
+      selectedChallenges: null,
       filters: {},
       submitted: false,
       /*      statuses: [
         { label: "Published", value: "published" },
         { label: "Unpublished", value: "unpublished" },
       ],*/
-      offersService: null,
+      challengesService: null,
     };
   },
   created() {
-    this.offersService = new OffersApiService();
-    this.offersService.getAll().then((response) => {
-      this.offers = response.data;
-      this.offers.forEach((tutorial) => this.getDisplayableOffer(tutorial));
-      console.log(this.offers);
+    this.challengesService = new ChallengesApiService();
+    this.challengesService.getAll().then((response) => {
+      this.challenges = response.data;
+      this.challenges.forEach((challenge) =>
+        this.getDisplayableChallenge(challenge)
+      );
+      console.log(this.challenges);
     });
     this.initFilters();
   },
   methods: {
-    getDisplayableOffer(tutorial) {
-      return tutorial;
+    getDisplayableChallenge(challenge) {
+      return challenge;
     },
-    getStorableOffer(displayableOffer) {
+    getStorableChallenge(displayableChallenge) {
       return {
-        id: displayableOffer.id,
-        title: displayableOffer.title,
-        description: displayableOffer.description,
-        points: displayableOffer.points,
-        businessId: displayableOffer.businessId,
+        id: displayableChallenge.id,
+        title: displayableChallenge.title,
+        businessId: displayableChallenge.businessId,
+        urlToImage: displayableChallenge.urlToImage,
+        challengeType: displayableChallenge.challengeType,
       };
     },
     initFilters() {
@@ -288,71 +298,73 @@ export default {
       };
     },
     findIndexById(id) {
-      return this.offers.findIndex((offer) => offer.id === id);
+      return this.challenges.findIndex((challenge) => challenge.id === id);
     },
     openNew() {
-      this.offer = {};
+      this.challenge = {};
       this.submitted = false;
-      this.offerDialog = true;
+      this.challengeDialog = true;
     },
     hideDialog() {
-      this.offerDialog = false;
+      this.challengeDialog = false;
       this.submitted = false;
     },
-    saveOffer() {
+    saveChallenge() {
       this.submitted = true;
-      if (this.offer.title.trim()) {
-        if (this.offer.id) {
-          this.offer = this.getStorableOffer(this.offer);
-          this.offersService
-            .update(this.offer.id, this.offer)
+      if (this.challenge.title.trim()) {
+        if (this.challenge.id) {
+          this.challenge = this.getStorableChallenge(this.challenge);
+          this.challengesService
+            .update(this.challenge.id, this.challenge)
             .then((response) => {
-              this.offers[this.findIndexById(response.data.id)] =
-                this.getDisplayableOffer(response.data);
+              this.challenges[this.findIndexById(response.data.id)] =
+                this.getDisplayableChallenge(response.data);
               this.$toast.add({
                 severity: "success",
                 summary: "Successful",
-                detail: "Tutorial Updated",
+                detail: "challenge Updated",
                 life: 3000,
               });
               console.log(response);
             });
         } else {
-          this.offer.id = 0;
-          this.offer = this.getStorableOffer(this.offer);
-          this.offersService.create(this.offer).then((response) => {
-            this.offer = this.getDisplayableOffer(response.data);
-            this.offers.push(this.offer);
+          this.challenge.id = 0;
+          this.challenge = this.getStorableChallenge(this.challenge);
+          this.challengesService.create(this.challenge).then((response) => {
+            this.challenge = this.getDisplayableChallenge(response.data);
+            this.challenges.push(this.challenge);
             this.$toast.add({
               severity: "success",
               summary: "Successful",
-              detail: "Tutorial Created",
+              detail: "challenge Created",
               life: 3000,
             });
             console.log(response);
           });
         }
       }
-      this.offerDialog = false;
-      this.offer = {};
+      this.challengeDialog = false;
+      this.challenge = {};
     },
-    editOffer(offer) {
-      this.offer = { ...offer };
-      this.offerDialog = true;
+    editChallenge(challenge) {
+      this.challenge = { ...challenge };
+      this.challengeDialog = true;
     },
-    confirmDeleteOffer(offer) {
-      this.offer = offer;
-      this.deleteOfferDialog = true;
+    confirmDeleteChallenge(challenge) {
+      this.challenge = challenge;
+      this.deleteChallengeDialog = true;
     },
-    deleteOffer() {
-      this.offersService.delete(this.offer.id).then((response) => {
-        this.offers = this.offers.filter((t) => t.id !== this.offer.id);
-        this.deleteOfferDialog = false;
-        this.offer = {};
+    deleteChallenge() {
+      this.challengesService.delete(this.challenge.id).then((response) => {
+        this.challenges = this.challenges.filter(
+          (t) => t.id !== this.challenge.id
+        );
+        this.deleteChallengeDialog = false;
+        this.challenge = {};
         this.$toast.add({
           severity: "success",
           summary: "Successful",
-          detail: "Tutorial Deleted",
+          detail: "challenge Deleted",
           life: 3000,
         });
         console.log(response);
@@ -362,16 +374,19 @@ export default {
       this.$refs.dt.exportCSV();
     },
     confirmDeleteSelected() {
-      this.deleteOffersDialog = true;
+      this.deleteChallengesDialog = true;
     },
-    deleteSelectedOffers() {
-      this.selectedOffers.forEach((tutorial) => {
-        this.offersService.delete(tutorial.id).then((response) => {
-          this.offers = this.offers.filter((t) => t.id !== this.offer.id);
+    deleteSelectedChallenges() {
+      this.selectedChallenges.forEach((challenge) => {
+        this.challengesService.delete(challenge.id).then((response) => {
+          this.challenges = this.challenges.filter(
+            (t) => t.id !== this.challenge.id
+          );
           console.log(response);
         });
       });
-      this.deleteOffersDialog = false;
+      this.deleteChallengesDialog = false;
+      this.$forceUpdate();
     },
   },
 };

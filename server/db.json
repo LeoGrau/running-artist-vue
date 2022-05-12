@@ -1,25 +1,25 @@
 {
-  "offers": [
+  "challenges": [
     {
       "id": 1,
-      "title": "Valentine's Day",
-      "description": "Buy on Valentine's Day with 25% discount in all shoes and get 80 Kinetic Points",
-      "points": 80,
-      "businessId": 1
+      "title": "Koala",
+      "businessId": 1,
+      "urlToImage": "https://media.istockphoto.com/vectors/koala-outline-logo-icon-australian-animal-for-web-and-design-vector-id1205963214?s=612x612",
+      "challengeType": "Individual"
     },
     {
       "id": 2,
-      "title": "San Isidro Store",
-      "description": "Form a figure running by our San Isidro Store and get 30 Kinetic Points",
-      "points": 30,
-      "businessId": 2
+      "title": "Cat",
+      "businessId": 2,
+      "urlToImage": "https://as2.ftcdn.net/v2/jpg/02/25/25/81/1000_F_225258132_kKs9Ib4S2EbjkL8V2YqqYRNbITeOPQIz.jpg",
+      "challengeType": "Team"
     },
     {
       "id": 3,
-      "title": "At the Center",
-      "description": "Form a figure having at the center one of our stores locations and get 70 Kinetic Points",
-      "points": 70,
-      "businessId": 1
+      "title": "Car",
+      "businessId": 1,
+      "urlToImage": "https://static.vecteezy.com/system/resources/previews/001/416/626/large_2x/car-outline-icon-vector.jpg",
+      "challengeType": "Team"
     }
   ]
 }

@@ -1,11 +1,8 @@
 <template>
-  <pv-toolbar class="bg-primary">
+  <pv-toolbar
+    style="background-color: rgb(1, 18, 70); color: rgb(255, 217, 91)"
+  >
     <template #start>
-      <pv-button
-        class="p-button-text text-white"
-        icon="pi pi-bars"
-        @click="drawer = !drawer"
-      ></pv-button>
       <h3>Running Artist</h3>
     </template>
     <template #end>
@@ -36,12 +33,14 @@ export default {
     return {
       drawer: false,
       items: [
-        { label: "Offers", to: "/" },
-        { label: "New Offer", to: "/offers" },
+        { label: "Challenges", to: "/" },
+        { label: "New Challenge", to: "/business/challenges" },
       ],
     };
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+
+</style>

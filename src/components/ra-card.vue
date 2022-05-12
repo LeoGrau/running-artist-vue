@@ -2,12 +2,13 @@
   <div>
     <pv-card>
       <template #header>
-        <img alt="user header" src="https://source.unsplash.com/random" />
+        <img alt="user header" :src="challengeData.urlToImage" />
       </template>
-      <template #title> {{ offerData.title }} </template>
+      <template #title> {{ challengeData.title }} </template>
       <template #content>
-        {{ offerData.description }}
-        <p> Points: {{ offerData.points }} </p>
+        {{ challengeData.description }}
+        <p> ChallengeType: {{ challengeData.challengeType }} </p>
+        <p> BussinessId: {{ challengeData.businessId }} </p>
       </template>
       <template #footer>
         <pv-button icon="pi pi-check" label="Save" />
@@ -26,7 +27,7 @@
 export default {
   name: "RaCard",
   props: {
-    offerData: Object
+    challengeData: Object
   },
 };
 </script>
