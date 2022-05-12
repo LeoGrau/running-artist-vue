@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ChallengesView from "../views/challenges-view.vue";
-import ChallengesOffersView from "../views/crud-challenges-view.vue";
+import ChallengesCrudView from "../views/crud-challenges-view.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: "/business/challenges",
       name: "challenges",
-      component: ChallengesOffersView,
+      component: ChallengesCrudView,
     },
   ],
 });
